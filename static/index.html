@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#135e4b">
+  <title>Dog tracker</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🐾%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="/style.css">
+  <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script defer src="/app.js"></script>
+</head>
+<body>
+  <header><span class="logo">🐾</span><div><h1 id="name">Dog tracker</h1><p>Mictrack MT710 · Your companion, on the map</p></div><button id="logout" hidden>Lock</button></header>
+  <main>
+    <section id="login" class="card login">
+      <h2>Where’s your dog?</h2><p>Enter the access token printed by your server.</p>
+      <form id="login-form"><label for="token">Access token</label><input id="token" type="password" autocomplete="current-password" required><button class="primary">Open tracker</button></form>
+    </section>
+    <p id="message" role="status" aria-live="polite"></p>
+    <div id="dashboard" hidden>
+      <div id="demo" class="notice" hidden>DEMO · Simulated dog location and command replies</div>
+      <div class="status-row"><span id="connection" class="badge">Waiting for tracker</span><span id="seen">No reports yet</span></div>
+      <section class="card map-card" id="map-card"><div id="map"><p class="map-empty" id="map-empty">Waiting for the first GPS location…</p></div><div class="map-tools"><button id="fullscreen" aria-pressed="false" aria-controls="map-card">Full screen</button><button id="center">Center on dog</button><a id="directions" target="_blank" rel="noopener" hidden>Open in Maps ↗</a><span>Trail: last 24 hours</span></div></section>
+      <div class="metrics"><section class="card"><span>Location fix</span><strong id="fix">—</strong><small id="position-time">No location yet</small></section><section class="card"><span>Battery voltage</span><strong id="battery">—</strong><small id="event">No report yet</small></section><section class="card"><span>Speed</span><strong id="speed">—</strong><small id="coordinates">—</small></section></div>
+      <div class="columns">
+        <section class="card"><h2>Tracking & sleep</h2><p id="confirmed">No mode change confirmed by this server yet.</p>
+          <form id="settings"><label for="mode">Working mode</label><select id="mode"><option value="0">Auto · track movement, sleep when still</option><option value="1">Real-time · GPS always on</option><option value="4">Motion · sleep after 10 minutes still</option><option value="7">Smart · battery-saving movement tracking</option><option value="2">GPS auto · periodic GPS checks</option><option value="3">Deep sleep · wake on a schedule</option></select>
+            <p id="mode-help"></p><label for="period" id="period-label">Reporting period (seconds)</label><input id="period" type="number" value="30" min="10" max="600" step="1" required>
+            <div id="still-field"><label for="still">When still, report every (hours)</label><input id="still" type="number" min="1" max="24" value="1" step="1"></div>
+            <button class="primary">Apply configuration</button>
+          </form>
+          <p class="hint">Changes wait in the queue while the tracker sleeps or has no signal. The browser cannot wake a disconnected device.</p>
+          <details><summary>More controls</summary><label for="last-position">Device last-known-position reporting</label><select id="last-position"><option value="1">Enabled</option><option value="0">Disabled</option></select><button id="save-last">Apply last-position setting</button><p class="hint">An “L” report is an old location, not a new GPS fix.</p><label for="config-page">Read device configuration page</label><select id="config-page"><option>1</option><option>2</option><option>3</option><option>4</option></select><button id="read-config">Read configuration</button></details>
+        </section>
+        <section class="card"><h2>Command activity</h2><p class="hint">Confirmed means the device replied OK. Unknown means it may have applied the change without a reply; read configuration before trying again.</p><ol id="commands" class="commands"><li>No commands yet</li></ol></section>
+      </div>
+      <footer id="device"></footer>
+    </div>
+  </main>
+</body>
+</html>
